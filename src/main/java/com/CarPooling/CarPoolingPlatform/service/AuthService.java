@@ -5,6 +5,7 @@ import com.CarPooling.CarPoolingPlatform.dto.LoginRequest;
 import com.CarPooling.CarPoolingPlatform.dto.RegisterRequest;
 import com.CarPooling.CarPoolingPlatform.entity.User;
 import com.CarPooling.CarPoolingPlatform.repository.UserRepository;
+import com.CarPooling.CarPoolingPlatform.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final JwtUtil jwtUtil;
 
     public String register(RegisterRequest request) {
         User user = User.builder()
@@ -37,6 +38,6 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return "Login successful (JWT coming next)";
+        return jwtUtil.generateToken(user.getEmail());
     }
 }
