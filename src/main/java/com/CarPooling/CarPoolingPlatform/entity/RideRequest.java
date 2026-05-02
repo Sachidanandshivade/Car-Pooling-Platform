@@ -26,4 +26,11 @@ public class RideRequest {
     @ManyToOne
     @JoinColumn(name = "passenger_id")
     private User passenger;
+
+    @ManyToOne
+    @JoinColumn(name = "driver_id")
+    private User driver;
+
+    @Version
+    private Integer version;
 }
