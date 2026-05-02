@@ -21,7 +21,7 @@ public class CustomeruserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities("ROLE_USER") // we’ll improve later
+                .authorities("ROLE_USER" ) // we’ll improve later
                 .build();
     }
 }

@@ -21,6 +21,8 @@ public class RideService {
         User driver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+
+
         Ride ride = Ride.builder()
                 .source(request.getSource())
                 .destination(request.getDestination())

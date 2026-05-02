@@ -23,10 +23,10 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .Phone(request.getPhone())
-                .role("PASSENGER")
                 .build();
 
         userRepository.save(user);
+
         return "User registered successfully";
     }
 
@@ -38,6 +38,7 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(user.getEmail());
+
+        return jwtUtil.generateToken(user.getEmail(),user.getRole());
     }
 }

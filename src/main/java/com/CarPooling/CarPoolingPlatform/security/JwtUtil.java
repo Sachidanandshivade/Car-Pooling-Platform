@@ -3,7 +3,6 @@ package com.CarPooling.CarPoolingPlatform.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
-
 import java.security.Key;
 import java.util.Date;
 
@@ -13,7 +12,7 @@ public class JwtUtil {
     private final String SECRET = "mysecretkeymysecretkeymysecretkey"; // 32+ chars
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public String generateToken(String email) {
+    public String generateToken(String email,String Role) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
