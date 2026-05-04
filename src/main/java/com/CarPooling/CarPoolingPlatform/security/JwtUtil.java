@@ -3,6 +3,7 @@ package com.CarPooling.CarPoolingPlatform.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+
 import java.security.Key;
 import java.util.Date;
 
@@ -12,14 +13,10 @@ public class JwtUtil {
     private final String SECRET = "mysecretkeymysecretkeymysecretkey"; // 32+ chars
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-<<<<<<< HEAD
-    public String generateToken(String email,String role) {
-=======
-    public String generateToken(String email,String Role) {
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
+    public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role",role)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -34,16 +31,11 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
+
     public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return extractEmail(token);
     }
 
-<<<<<<< HEAD
     public String extractRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -53,15 +45,15 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
-=======
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-
 }

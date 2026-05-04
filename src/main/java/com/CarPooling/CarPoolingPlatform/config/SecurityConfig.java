@@ -1,9 +1,7 @@
 package com.CarPooling.CarPoolingPlatform.config;
 
-<<<<<<< HEAD
-
 import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
-import com.CarPooling.CarPoolingPlatform.service.CustomerUserDetailsService;
+import com.CarPooling.CarPoolingPlatform.service.CustomeruserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,25 +16,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-=======
-import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-<<<<<<< HEAD
-    private final CustomerUserDetailsService userDetailsService;
+    private final CustomeruserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -54,27 +40,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ JWT = no sessions
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+
+                        // Public APIs
                         .requestMatchers("/auth/**").permitAll()
+
+                        // DRIVER only APIs
                         .requestMatchers(HttpMethod.POST, "/requests/*/accept").hasRole("DRIVER")
                         .requestMatchers(HttpMethod.POST, "/rides").hasRole("DRIVER")
-                        .requestMatchers(HttpMethod.GET, "/requests/pending/filter").hasRole("DRIVER")
+                        .requestMatchers(HttpMethod.GET, "/requests/pending").hasRole("DRIVER")
+
+                        // PASSENGER only APIs
                         .requestMatchers(HttpMethod.POST, "/requests").hasRole("PASSENGER")
+
+                        // Authenticated
                         .requestMatchers(HttpMethod.GET, "/rides/search").authenticated()
-=======
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        // ✅ VERY IMPORTANT
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
+
+                        // fallback
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

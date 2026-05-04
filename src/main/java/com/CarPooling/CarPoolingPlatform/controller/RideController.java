@@ -4,11 +4,9 @@ package com.CarPooling.CarPoolingPlatform.controller;
 import com.CarPooling.CarPoolingPlatform.dto.CreateRideRequest;
 import com.CarPooling.CarPoolingPlatform.entity.Ride;
 import com.CarPooling.CarPoolingPlatform.security.JwtUtil;
-<<<<<<< HEAD
+
 import com.CarPooling.CarPoolingPlatform.service.RideServices;
-=======
 import com.CarPooling.CarPoolingPlatform.service.RideService;
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideController {
 
-<<<<<<< HEAD
+
     private final RideServices rideService;
-=======
-    private final RideService rideService;
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
+
     private final JwtUtil jwtUtil;
 
     @PostMapping
