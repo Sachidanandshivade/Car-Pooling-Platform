@@ -1,6 +1,5 @@
 package com.CarPooling.CarPoolingPlatform.service;
 
-
 import com.CarPooling.CarPoolingPlatform.dto.LoginRequest;
 import com.CarPooling.CarPoolingPlatform.dto.RegisterRequest;
 import com.CarPooling.CarPoolingPlatform.entity.User;
@@ -13,11 +12,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public String register(RegisterRequest request) {
+
         String role = request.getRole();
 
         if (!role.equals("PASSENGER") && !role.equals("DRIVER")) {
@@ -28,11 +29,8 @@ public class AuthService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .Phone(request.getPhone())
-<<<<<<< HEAD
+                .phone(request.getPhone())
                 .role(role)
-=======
->>>>>>> f23408174ba710020cb531aa74c34512142e947a
                 .build();
 
         userRepository.save(user);
@@ -41,6 +39,7 @@ public class AuthService {
     }
 
     public String login(LoginRequest request) {
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -48,7 +47,6 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-
-        return jwtUtil.generateToken(user.getEmail(),user.getRole());
+        return jwtUtil.generateToken(user.getEmail(), user.getRole());
     }
 }
