@@ -12,7 +12,11 @@ public class JwtUtil {
     private final String SECRET = "mysecretkeymysecretkeymysecretkey"; // 32+ chars
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
+<<<<<<< HEAD
     public String generateToken(String email,String role) {
+=======
+    public String generateToken(String email,String Role) {
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role",role)
@@ -39,6 +43,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
+<<<<<<< HEAD
     public String extractRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -48,6 +53,8 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
+=======
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

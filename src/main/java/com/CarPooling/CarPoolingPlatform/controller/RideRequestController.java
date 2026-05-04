@@ -1,8 +1,13 @@
 package com.CarPooling.CarPoolingPlatform.controller;
 
+<<<<<<< HEAD
 
 import com.CarPooling.CarPoolingPlatform.dto.CreateRideRequestDto;
 import com.CarPooling.CarPoolingPlatform.entity.RideRequest;
+=======
+import com.CarPooling.CarPoolingPlatform.dto.CreateRideRequest;
+import com.CarPooling.CarPoolingPlatform.dto.createRideRequestDto;
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
 import com.CarPooling.CarPoolingPlatform.entity.RideRequest;
 import com.CarPooling.CarPoolingPlatform.service.RideRequestService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +23,11 @@ public class RideRequestController {
     private final RideRequestService rideRequestService;
 
     @PostMapping
+<<<<<<< HEAD
     public String createRequest(@RequestBody CreateRideRequestDto dto, Authentication authentication){
+=======
+    public String createRequest(@RequestBody createRideRequestDto dto, Authentication authentication){
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
         String email = authentication.getName();
         return rideRequestService.createRequest(dto,email);
     }

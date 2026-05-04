@@ -29,7 +29,10 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .Phone(request.getPhone())
+<<<<<<< HEAD
                 .role(role)
+=======
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
                 .build();
 
         userRepository.save(user);

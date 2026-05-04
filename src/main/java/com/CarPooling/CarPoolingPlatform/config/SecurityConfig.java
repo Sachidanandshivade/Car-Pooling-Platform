@@ -1,5 +1,6 @@
 package com.CarPooling.CarPoolingPlatform.config;
 
+<<<<<<< HEAD
 
 import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
 import com.CarPooling.CarPoolingPlatform.service.CustomerUserDetailsService;
@@ -17,12 +18,24 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+=======
+import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+<<<<<<< HEAD
     private final CustomerUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
@@ -53,6 +66,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/requests/pending/filter").hasRole("DRIVER")
                         .requestMatchers(HttpMethod.POST, "/requests").hasRole("PASSENGER")
                         .requestMatchers(HttpMethod.GET, "/rides/search").authenticated()
+=======
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
+                        // ✅ VERY IMPORTANT
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -32,5 +32,9 @@ public class RideRequest {
     private User driver;
 
     @Version
+<<<<<<< HEAD
     private int version = 0;
+=======
+    private Integer version;
+>>>>>>> f23408174ba710020cb531aa74c34512142e947a
 }
