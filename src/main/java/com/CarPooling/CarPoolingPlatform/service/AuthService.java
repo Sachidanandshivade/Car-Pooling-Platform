@@ -18,15 +18,22 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     public String register(RegisterRequest request) {
+        String role = request.getRole();
+
+        if (!role.equals("PASSENGER") && !role.equals("DRIVER")) {
+            throw new RuntimeException("Invalid role");
+        }
+
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .Phone(request.getPhone())
-                .role("PASSENGER")
+                .role(role)
                 .build();
 
         userRepository.save(user);
+
         return "User registered successfully";
     }
 
@@ -38,6 +45,7 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(user.getEmail());
+
+        return jwtUtil.generateToken(user.getEmail(),user.getRole());
     }
 }
