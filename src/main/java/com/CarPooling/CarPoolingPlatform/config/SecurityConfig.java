@@ -1,7 +1,7 @@
 package com.CarPooling.CarPoolingPlatform.config;
 
 import com.CarPooling.CarPoolingPlatform.security.JwtFilter;
-import com.CarPooling.CarPoolingPlatform.service.CustomeruserDetailsService;
+import com.CarPooling.CarPoolingPlatform.service.CustomerUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    private final CustomeruserDetailsService userDetailsService;
+    private final CustomerUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     @Bean

@@ -1,6 +1,6 @@
 package com.CarPooling.CarPoolingPlatform.security;
 
-import com.CarPooling.CarPoolingPlatform.service.CustomeruserDetailsService;
+import com.CarPooling.CarPoolingPlatform.service.CustomerUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomeruserDetailsService userDetailsService;
+    private final CustomerUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
