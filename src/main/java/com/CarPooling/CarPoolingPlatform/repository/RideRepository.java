@@ -11,4 +11,7 @@ public interface RideRepository extends JpaRepository<Ride,  Long> {
     @Query("SELECT r FROM Ride r WHERE LOWER(r.source) LIKE LOWER(CONCAT('%', :source, '%')) AND LOWER(r.destination) LIKE LOWER(CONCAT('%', :destination, '%'))")
     List<Ride> searchPartial(@Param("source") String source,
                              @Param("destination") String destination);
+
+    @Query("SELECT r FROM Ride r WHERE r.source = :source AND r.destination = :destination")
+    List<Ride> findMatchingRides(String source, String destination);
 }

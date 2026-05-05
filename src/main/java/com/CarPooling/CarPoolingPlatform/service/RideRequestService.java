@@ -44,38 +44,60 @@ public class RideRequestService {
     public String acceptRequest(Long requestId, String email) {
 
         try {
+            // 1️⃣ Get driver
             User driver = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Driver not found"));
 
+            // 2️⃣ Get request
             RideRequest request = rideRequestRepository.findById(requestId)
                     .orElseThrow(() -> new RuntimeException("Request not found"));
 
+            // 3️⃣ Prevent double accept
             if (!request.getStatus().equals("PENDING")) {
-                throw new RuntimeException("Request already accepted");
+                throw new RuntimeException("Already accepted");
             }
 
-            request.setDriver(driver);
-            request.setStatus("ACCEPTED");
+        List<Ride> rides = rideRepository.findMatchingRides(
+                request.getSource(),
+                request.getDestination()
+        );
 
-            rideRequestRepository.save(request);
+        for (Ride ride : rides) {
+            if (ride.getAvailableSeats() > 0) {
 
-            Ride ride = Ride.builder()
-                    .source(request.getSource())
-                    .destination(request.getDestination())
-                    .departureTime(request.getRequestTime())
-                    .availableSeats(4)
-                    .price(500)
-                    .driver(driver)
-                    .build();
+                // reduce seat
+                ride.setAvailableSeats(ride.getAvailableSeats() - 1);
+                rideRepository.save(ride);
 
-            rideRepository.save(ride);
+                // update request
+                request.setStatus("MATCHED");
+                request.setDriver(driver);
+                rideRequestRepository.save(request);
 
-            return "Request accepted and ride created";
+                return "Joined existing ride";
+            }
         }
-        catch (ObjectOptimisticLockingFailureException e) {
-            throw new RuntimeException("Another driver accepted this request");
+
+        Ride newRide = Ride.builder()
+                .source(request.getSource())
+                .destination(request.getDestination())
+                .departureTime(request.getRequestTime())
+                .availableSeats(4)
+                .price(500)
+                .driver(driver)
+                .build();
+
+        rideRepository.save(newRide);
+
+        request.setStatus("ACCEPTED");
+        request.setDriver(driver);
+        rideRequestRepository.save(request);
+
+        return "New ride created";
+    }  catch (ObjectOptimisticLockingFailureException e) {
+        return "Someone else already accepted this request";
         }
-    }
+        }
 
     public List<RideRequest> getPendingRequestsBySource(String source) {
         return rideRequestRepository.findByStatusAndSourceIgnoreCase("PENDING", source);
