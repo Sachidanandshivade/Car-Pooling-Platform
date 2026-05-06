@@ -30,4 +30,9 @@ public class Ride {
     @ManyToOne
     @JoinColumn(name = "driver_id")
     private User driver;
+
+    double sourceLat;
+    double sourceLng;
+    double destLat;
+    double destLng;
 }

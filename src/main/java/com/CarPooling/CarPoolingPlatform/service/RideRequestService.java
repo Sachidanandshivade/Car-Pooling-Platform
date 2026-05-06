@@ -18,11 +18,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideRequestService {
 
+    private final LocationService locationService;
     private final RideRequestRepository rideRequestRepository;
     private final UserRepository userRepository;
     private final RideRepository rideRepository;
 
     public String createRequest(CreateRideRequestDto dto, String email) {
+
+        double[] src = locationService.getCoordinates(dto.getSource());
+        double[] dest = locationService.getCoordinates(dto.getDestination());
+
+
 
         User passenger = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -34,6 +40,12 @@ public class RideRequestService {
                 .status("PENDING")
                 .passenger(passenger)
                 .build();
+
+        request.setSourceLat(src[0]);
+        request.setSourceLng(src[1]);
+
+        request.setDestLat(dest[0]);
+        request.setDestLng(dest[1]);
 
         rideRequestRepository.save(request);
 
@@ -56,27 +68,34 @@ public class RideRequestService {
             if (!request.getStatus().equals("PENDING")) {
                 throw new RuntimeException("Already accepted");
             }
+            List<Ride> rides = rideRepository.findAll();
 
-        List<Ride> rides = rideRepository.findMatchingRides(
-                request.getSource(),
-                request.getDestination()
-        );
+            for (Ride ride : rides) {
 
-        for (Ride ride : rides) {
-            if (ride.getAvailableSeats() > 0) {
+                List<double[]> route = locationService.getRoute(
+                        ride.getSourceLat(), ride.getSourceLng(),
+                        ride.getDestLat(), ride.getDestLng()
+                );
 
-                // reduce seat
-                ride.setAvailableSeats(ride.getAvailableSeats() - 1);
-                rideRepository.save(ride);
+                boolean pickupMatch = locationService.isNearRoute(
+                        request.getSourceLat(), request.getSourceLng(), route);
 
-                // update request
-                request.setStatus("MATCHED");
-                request.setDriver(driver);
-                rideRequestRepository.save(request);
+                boolean dropMatch = locationService.isNearRoute(
+                        request.getDestLat(), request.getDestLng(), route);
 
-                return "Joined existing ride";
+                if (pickupMatch && dropMatch && ride.getAvailableSeats() > 0) {
+
+                    ride.setAvailableSeats(ride.getAvailableSeats() - 1);
+                    rideRepository.save(ride);
+
+                    request.setStatus("MATCHED");
+                    request.setDriver(ride.getDriver());
+                    rideRequestRepository.save(request);
+
+                    return "Smart matched ride";
+                }
             }
-        }
+
 
         Ride newRide = Ride.builder()
                 .source(request.getSource())
@@ -102,4 +121,5 @@ public class RideRequestService {
     public List<RideRequest> getPendingRequestsBySource(String source) {
         return rideRequestRepository.findByStatusAndSourceIgnoreCase("PENDING", source);
     }
+
 }

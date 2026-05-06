@@ -34,5 +34,10 @@ public class RideRequest {
     @Version
     private int version = 0;
 
+    double sourceLat;
+    double sourceLng;
+    double destLat;
+    double destLng;
+
 
 }
