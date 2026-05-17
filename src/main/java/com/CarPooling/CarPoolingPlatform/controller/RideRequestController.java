@@ -3,6 +3,7 @@ package com.CarPooling.CarPoolingPlatform.controller;
 import com.CarPooling.CarPoolingPlatform.dto.CreateRideRequestDto;
 import com.CarPooling.CarPoolingPlatform.entity.RideRequest;
 import com.CarPooling.CarPoolingPlatform.service.RideRequestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class RideRequestController {
     private final RideRequestService rideRequestService;
 
     @PostMapping
-    public String createRequest(@RequestBody CreateRideRequestDto dto,
+    public String createRequest(@Valid @RequestBody CreateRideRequestDto dto,
                                 Authentication authentication) {
 
         String email = authentication.getName();
