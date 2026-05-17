@@ -24,15 +24,17 @@ public class Ride {
 
     private LocalDateTime departureTime;
 
-    private int availableSeats;
-    private double price;
+
+    private double fare;
+    private String status;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "driver_id")
     private User driver;
 
-    double sourceLat;
-    double sourceLng;
-    double destLat;
-    double destLng;
+    @ManyToOne
+    @JoinColumn(name = "passenger_id")
+    private User passenger;
 }

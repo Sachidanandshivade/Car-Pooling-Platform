@@ -50,7 +50,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // Public APIs
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
 
                         // DRIVER only APIs
                         .requestMatchers(HttpMethod.POST, "/requests/*/accept").hasRole("DRIVER")

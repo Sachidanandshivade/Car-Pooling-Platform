@@ -21,7 +21,13 @@ public class RideRequest {
 
     private LocalDateTime requestTime;
 
-    private String status; // PENDING, ACCEPTED
+    private String status;
+
+    private Double pickupLat;
+    private Double pickupLng;
+
+    private Double dropLat;
+    private Double dropLng;
 
     @ManyToOne
     @JoinColumn(name = "passenger_id")

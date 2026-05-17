@@ -65,54 +65,34 @@ public class RideRequestService {
                     .orElseThrow(() -> new RuntimeException("Request not found"));
 
             // 3️⃣ Prevent double accept
-            if (!request.getStatus().equals("PENDING")) {
+            if (!request.getStatus().equals("REQUESTED")) {
                 throw new RuntimeException("Already accepted");
             }
-            List<Ride> rides = rideRepository.findAll();
-
-            for (Ride ride : rides) {
-
-                List<double[]> route = locationService.getRoute(
-                        ride.getSourceLat(), ride.getSourceLng(),
-                        ride.getDestLat(), ride.getDestLng()
-                );
-
-                boolean pickupMatch = locationService.isNearRoute(
-                        request.getSourceLat(), request.getSourceLng(), route);
-
-                boolean dropMatch = locationService.isNearRoute(
-                        request.getDestLat(), request.getDestLng(), route);
-
-                if (pickupMatch && dropMatch && ride.getAvailableSeats() > 0) {
-
-                    ride.setAvailableSeats(ride.getAvailableSeats() - 1);
-                    rideRepository.save(ride);
-
-                    request.setStatus("MATCHED");
-                    request.setDriver(ride.getDriver());
-                    rideRequestRepository.save(request);
-
-                    return "Smart matched ride";
-                }
+            if (!driver.isAvailable()) {
+                throw new RuntimeException("Driver is already on a ride");
             }
 
 
-        Ride newRide = Ride.builder()
-                .source(request.getSource())
-                .destination(request.getDestination())
-                .departureTime(request.getRequestTime())
-                .availableSeats(4)
-                .price(500)
-                .driver(driver)
-                .build();
+            Ride newRide = Ride.builder()
+                    .source(request.getSource())
+                    .destination(request.getDestination())
+                    .departureTime(request.getRequestTime())
+                    .fare(500)
+                    .status("ACCEPTED")
+                    .driver(driver)
+                    .passenger(request.getPassenger())
+                    .build();
 
-        rideRepository.save(newRide);
+            rideRepository.save(newRide);
+            driver.setAvailable(false);
+            userRepository.save(driver);
+
 
         request.setStatus("ACCEPTED");
         request.setDriver(driver);
         rideRequestRepository.save(request);
 
-        return "New ride created";
+        return "Ride accepted successfully";
     }  catch (ObjectOptimisticLockingFailureException e) {
         return "Someone else already accepted this request";
         }
