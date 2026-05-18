@@ -1,12 +1,13 @@
 package com.CarPooling.CarPoolingPlatform.controller;
 
+import com.CarPooling.CarPoolingPlatform.dto.ApiResponse;
 import com.CarPooling.CarPoolingPlatform.service.RideService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/rides")
@@ -14,28 +15,58 @@ import org.springframework.web.bind.annotation.RestController;
 public class RideController {
 
     private final RideService rideService;
+
     @PutMapping("/{id}/start")
-    public String startRide(@PathVariable Long id,
-                            Authentication authentication) {
+    public ResponseEntity<ApiResponse> startRide(
+            @PathVariable Long id,
+            Authentication authentication) {
 
         String email = authentication.getName();
 
-        return rideService.startRide(id, email);
+        String message = rideService.startRide(id, email);
+
+        ApiResponse response = new ApiResponse(
+                message,
+                null,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
     }
+
     @PutMapping("/{id}/complete")
-    public String completeRide(@PathVariable Long id,
-                               Authentication authentication) {
+    public ResponseEntity<ApiResponse> completeRide(
+            @PathVariable Long id,
+            Authentication authentication) {
 
         String email = authentication.getName();
 
-        return rideService.completeRide(id, email);
+        String message = rideService.completeRide(id, email);
+
+        ApiResponse response = new ApiResponse(
+                message,
+                null,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
     }
+
     @PutMapping("/{id}/cancel")
-    public String cancelRide(@PathVariable Long id,
-                             Authentication authentication) {
+    public ResponseEntity<ApiResponse> cancelRide(
+            @PathVariable Long id,
+            Authentication authentication) {
 
         String email = authentication.getName();
 
-        return rideService.cancelRide(id, email);
+        String message = rideService.cancelRide(id, email);
+
+        ApiResponse response = new ApiResponse(
+                message,
+                null,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
