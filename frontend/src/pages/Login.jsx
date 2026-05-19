@@ -23,11 +23,11 @@ export default function Login() {
         try {
             const response = await loginUser(formData);
 
-            localStorage.setItem("token", response.data.data);
+            localStorage.setItem("token", response.data);
 
             alert("Login Successful");
 
-            navigate("/");
+            navigate("/dashboard");
         } catch (error) {
             alert(error.response?.data?.message || "Login Failed");
         }

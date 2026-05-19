@@ -10,5 +10,5 @@ public class CreateRideRequest {
     private String destination;
     private LocalDateTime departureTime;
     private int availableSeats;
-    private double price;
+    private double fare;
 }

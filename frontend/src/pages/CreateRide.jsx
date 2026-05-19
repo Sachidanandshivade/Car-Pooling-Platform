@@ -1,22 +1,19 @@
 import { useState } from "react";
-import { registerUser } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { createRide } from "../services/rideService";
 
-export default function Register() {
+export default function CreateRide() {
 
-    const navigate = useNavigate();
-
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        phone: "",
-        role: "PASSENGER",
+    const [rideData, setRideData] = useState({
+        source: "",
+        destination: "",
+        departureTime: "",
+        fare: 0,
     });
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
+
+        setRideData({
+            ...rideData,
             [e.target.name]: e.target.value,
         });
     };
@@ -27,19 +24,18 @@ export default function Register() {
 
         try {
 
-            await registerUser(formData);
+            await createRide(rideData);
 
-            alert("Registration Successful");
-
-            navigate("/");
+            alert("Ride Created Successfully");
 
         } catch (error) {
 
-            alert(error.response?.data?.message || "Registration Failed");
+            alert(error.response?.data?.message || "Failed to create ride");
         }
     };
 
     return (
+
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
             <form
@@ -48,55 +44,45 @@ export default function Register() {
             >
 
                 <h1 className="text-3xl font-bold mb-6 text-center">
-                    Register
+                    Create Ride
                 </h1>
 
                 <input
                     type="text"
-                    name="name"
-                    placeholder="Name"
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded mb-4"
-                />
-
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded mb-4"
-                />
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
+                    name="source"
+                    placeholder="Source"
                     onChange={handleChange}
                     className="w-full border p-3 rounded mb-4"
                 />
 
                 <input
                     type="text"
-                    name="phone"
-                    placeholder="Phone"
+                    name="destination"
+                    placeholder="Destination"
                     onChange={handleChange}
                     className="w-full border p-3 rounded mb-4"
                 />
 
-                <select
-                    name="role"
+                <input
+                    type="datetime-local"
+                    name="departureTime"
                     onChange={handleChange}
                     className="w-full border p-3 rounded mb-4"
-                >
-                    <option value="PASSENGER">Passenger</option>
-                    <option value="DRIVER">Driver</option>
-                </select>
+                />
+
+                <input
+                    type="number"
+                    name="fare"
+                    placeholder="Fare"
+                    onChange={handleChange}
+                    className="w-full border p-3 rounded mb-4"
+                />
 
                 <button
                     type="submit"
                     className="w-full bg-black text-white py-3 rounded"
                 >
-                    Register
+                    Create Ride
                 </button>
 
             </form>
