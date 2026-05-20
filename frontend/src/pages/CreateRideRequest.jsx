@@ -1,0 +1,117 @@
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { createRideRequest } from "../services/rideRequestService";
+
+export default function CreateRideRequest() {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        source: "",
+        destination: "",
+        requestTime: "",
+    });
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+            // Convert datetime-local to ISO format for backend (LocalDateTime)
+            const payload = {
+                ...formData,
+                requestTime: new Date(formData.requestTime).toISOString().slice(0, 19),
+            };
+            await createRideRequest(payload);
+            alert("Ride request created successfully!");
+            navigate("/dashboard");
+        } catch (err) {
+            setError(err.response?.data?.message || "Failed to create ride request.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            {/* Navbar */}
+            <nav className="bg-black text-white px-6 py-4 flex items-center justify-between">
+                <span className="text-xl font-bold">🚗 CarPooling</span>
+                <Link to="/dashboard" className="text-sm text-gray-300 hover:text-white transition">
+                    ← Back to Dashboard
+                </Link>
+            </nav>
+
+            <div className="max-w-lg mx-auto p-6 mt-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <h1 className="text-2xl font-bold text-gray-800 mb-1">Request a Ride</h1>
+                    <p className="text-gray-500 text-sm mb-6">Fill in the details and a driver will accept your request.</p>
+
+                    {error && (
+                        <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Pickup Location
+                            </label>
+                            <input
+                                type="text"
+                                name="source"
+                                placeholder="e.g. Koramangala, Bangalore"
+                                value={formData.source}
+                                onChange={handleChange}
+                                required
+                                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Drop Location
+                            </label>
+                            <input
+                                type="text"
+                                name="destination"
+                                placeholder="e.g. Electronic City, Bangalore"
+                                value={formData.destination}
+                                onChange={handleChange}
+                                required
+                                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                            />
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Pickup Date & Time
+                            </label>
+                            <input
+                                type="datetime-local"
+                                name="requestTime"
+                                value={formData.requestTime}
+                                onChange={handleChange}
+                                required
+                                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50"
+                        >
+                            {loading ? "Submitting..." : "Submit Request"}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+}
