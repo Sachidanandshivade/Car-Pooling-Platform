@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideRequestController {
 
+     private final LocationService locationService;
     private final RideRequestService rideRequestService;
 
     @PostMapping
