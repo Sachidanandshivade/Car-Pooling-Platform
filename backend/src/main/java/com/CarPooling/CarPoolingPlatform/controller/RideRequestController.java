@@ -51,20 +51,35 @@ public class RideRequestController {
         return ResponseEntity.ok(new ApiResponse("Your requests fetched", requests, LocalDateTime.now()));
     }
     
-    @GetMapping("/estimate-fare")
-public ResponseEntity<Double> estimateFare(@RequestParam String source,
-                                            @RequestParam String destination) {
+   @GetMapping("/estimate-fare")
+public ResponseEntity<ApiResponse> estimateFare(
+        @RequestParam String source,
+        @RequestParam String destination) {
 
     double[] src = locationService.getCoordinates(source);
     double[] dest = locationService.getCoordinates(destination);
 
-    double distance = locationService.distance(
-            src[0], src[1],
-            dest[0], dest[1]
-    );
+    // ✅ Use road distance instead of straight line
+    List<double[]> route = locationService.getRoute(
+            src[0], src[1], dest[0], dest[1]);
+    double distance = locationService.roadDistance(route);
 
-    double fare = 30 + (distance * 10); // same logic as backend
+    // ✅ Sanity check — no Bangalore route should exceed 80 km
+    if (distance > 80) {
+        return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                        "Locations seem to be outside Bangalore (distance: "
+                        + String.format("%.1f", distance) + " km). " +
+                        "Please enter valid Bangalore localities.",
+                        null,
+                        LocalDateTime.now()
+                )
+        );
+    }
 
-    return ResponseEntity.ok(fare);
+    double fare = Math.round((30 + distance * 10) * 100.0) / 100.0;
+
+    return ResponseEntity.ok(
+            new ApiResponse("Fare estimated successfully", fare, LocalDateTime.now()));
 }
 }
