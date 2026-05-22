@@ -91,6 +91,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/requests/estimate-fare").permitAll()
 
                         .requestMatchers("/auth/**").permitAll()
 
