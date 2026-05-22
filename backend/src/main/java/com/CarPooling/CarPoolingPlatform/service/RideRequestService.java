@@ -18,14 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideRequestService {
 
-      private final LocationService locationService;
-    
+    private static final double BASE_FARE = 30;
+    private static final double PRICE_PER_KM = 10;
+
     private final LocationService locationService;
     private final RideRequestRepository rideRequestRepository;
     private final UserRepository userRepository;
     private final RideRepository rideRepository;
 
     public String createRequest(CreateRideRequestDto dto, String email) {
+
         double[] src = locationService.getCoordinates(dto.getSource());
         double[] dest = locationService.getCoordinates(dto.getDestination());
 
@@ -38,19 +40,21 @@ public class RideRequestService {
                 .requestTime(dto.getRequestTime())
                 .status("PENDING")
                 .passenger(passenger)
-                .sourceLat(src[0])
-                .sourceLng(src[1])
-                .destLat(dest[0])
-                .destLng(dest[1])
+                .pickupLat(src[0])
+                .pickupLng(src[1])
+                .dropLat(dest[0])
+                .dropLng(dest[1])
                 .build();
 
         rideRequestRepository.save(request);
+
         return "Ride request created successfully";
     }
 
     @Transactional
     public String acceptRequest(Long requestId, String email) {
         try {
+
             User driver = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Driver not found"));
 
@@ -64,16 +68,15 @@ public class RideRequestService {
             if (!driver.isAvailable()) {
                 throw new RuntimeException("You are already on a ride");
             }
-            
+
             double distance = locationService.distance(
-        request.getSourceLat(),
-        request.getSourceLng(),
-        request.getDestLat(),
-        request.getDestLng()
-);
-              System.out.println("SOURCE LAT LNG: " + request.getSourceLat() + " , " + request.getSourceLng());
-System.out.println("DEST LAT LNG: " + request.getDestLat() + " , " + request.getDestLng());
-double fare = BASE_FARE + (distance * PRICE_PER_KM);
+                    request.getPickupLat(),
+                    request.getPickupLng(),
+                    request.getDropLat(),
+                    request.getDropLng()
+            );
+
+            double fare = BASE_FARE + (distance * PRICE_PER_KM);
 
             Ride newRide = Ride.builder()
                     .source(request.getSource())
@@ -104,10 +107,10 @@ double fare = BASE_FARE + (distance * PRICE_PER_KM);
     public List<RideRequest> getPendingRequestsBySource(String source) {
         return rideRequestRepository.findByStatusAndSourceIgnoreCase("PENDING", source);
     }
+
     public List<RideRequest> getMyRequests(String email) {
         User passenger = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return rideRequestRepository.findByPassenger(passenger);
     }
-    
 }
