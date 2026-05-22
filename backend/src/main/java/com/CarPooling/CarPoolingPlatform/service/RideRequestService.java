@@ -18,6 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideRequestService {
 
+      private static final double BASE_FARE = 30;
+    private static final double PRICE_PER_KM = 10;
+    
     private final LocationService locationService;
     private final RideRequestRepository rideRequestRepository;
     private final UserRepository userRepository;
@@ -62,12 +65,21 @@ public class RideRequestService {
             if (!driver.isAvailable()) {
                 throw new RuntimeException("You are already on a ride");
             }
+            
+            double distance = calculateDistance(
+        request.getSourceLat(),
+        request.getSourceLng(),
+        request.getDestLat(),
+        request.getDestLng()
+);
+
+double fare = BASE_FARE + (distance * PRICE_PER_KM);
 
             Ride newRide = Ride.builder()
                     .source(request.getSource())
                     .destination(request.getDestination())
                     .departureTime(request.getRequestTime())
-                    .fare(500)
+                    .fare(fare)
                     .status("ACCEPTED")
                     .driver(driver)
                     .passenger(request.getPassenger())
@@ -97,4 +109,18 @@ public class RideRequestService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return rideRequestRepository.findByPassenger(passenger);
     }
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    final int R = 6371;
+
+    double latDistance = Math.toRadians(lat2 - lat1);
+    double lonDistance = Math.toRadians(lon2 - lon1);
+
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+}
 }
