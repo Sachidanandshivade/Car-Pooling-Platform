@@ -48,4 +48,21 @@ public class RideRequestController {
         List<RideRequest> requests = rideRequestService.getMyRequests(authentication.getName());
         return ResponseEntity.ok(new ApiResponse("Your requests fetched", requests, LocalDateTime.now()));
     }
+    
+    @GetMapping("/estimate-fare")
+public ResponseEntity<Double> estimateFare(@RequestParam String source,
+                                            @RequestParam String destination) {
+
+    double[] src = locationService.getCoordinates(source);
+    double[] dest = locationService.getCoordinates(destination);
+
+    double distance = locationService.distance(
+            src[0], src[1],
+            dest[0], dest[1]
+    );
+
+    double fare = 30 + (distance * 10); // same logic as backend
+
+    return ResponseEntity.ok(fare);
+}
 }
