@@ -20,6 +20,8 @@ public class RideRequestService {
 
       private static final double BASE_FARE = 30;
     private static final double PRICE_PER_KM = 10;
+      System.out.println("SOURCE LAT LNG: " + request.getSourceLat() + " , " + request.getSourceLng());
+System.out.println("DEST LAT LNG: " + request.getDestLat() + " , " + request.getDestLng());
     
     private final LocationService locationService;
     private final RideRequestRepository rideRequestRepository;
