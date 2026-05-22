@@ -35,7 +35,7 @@ export default function CreateRideRequest() {
                 `https://car-pooling-platform-3.onrender.com/requests/estimate-fare?source=${source}&destination=${destination}`
             );
             const data = await res.json();
-            setFare(data);
+            setFare(data.data);
         } catch (err) {
             console.log("Fare error:", err);
             setFare(null);
