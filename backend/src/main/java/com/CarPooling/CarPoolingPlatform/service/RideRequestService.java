@@ -71,6 +71,8 @@ public class RideRequestService {
         request.getDestLat(),
         request.getDestLng()
 );
+              System.out.println("SOURCE LAT LNG: " + request.getSourceLat() + " , " + request.getSourceLng());
+System.out.println("DEST LAT LNG: " + request.getDestLat() + " , " + request.getDestLng());
 double fare = BASE_FARE + (distance * PRICE_PER_KM);
 
             Ride newRide = Ride.builder()
