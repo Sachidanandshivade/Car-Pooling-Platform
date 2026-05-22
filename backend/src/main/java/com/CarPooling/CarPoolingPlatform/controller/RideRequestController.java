@@ -4,6 +4,7 @@ import com.CarPooling.CarPoolingPlatform.dto.ApiResponse;
 import com.CarPooling.CarPoolingPlatform.dto.CreateRideRequestDto;
 import com.CarPooling.CarPoolingPlatform.entity.RideRequest;
 import com.CarPooling.CarPoolingPlatform.service.RideRequestService;
+import com.CarPooling.CarPoolingPlatform.service.LocationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
