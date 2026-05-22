@@ -32,7 +32,7 @@ export default function CreateRideRequest() {
         setFareLoading(true);
         try {
             const res = await fetch(
-                `http://localhost:8080/rides/estimate-fare?source=${source}&destination=${destination}`
+                `https://car-pooling-platform-3.onrender.com/requests/estimate-fare?source=${source}&destination=${destination}`
             );
             const data = await res.json();
             setFare(data);
