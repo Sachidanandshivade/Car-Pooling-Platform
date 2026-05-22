@@ -30,10 +30,7 @@ public class RideRequest {
     private Double dropLat;
     private Double dropLng;
 
-    double sourceLat;
-    double sourceLng;
-    double destLat;
-    double destLng;
+   
 
     @ManyToOne
     @JoinColumn(name = "passenger_id")
