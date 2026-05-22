@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://10.116.165.138:8080",
+    baseURL: "https://car-pooling-platform-3.onrender.com",
 });
 
 api.interceptors.request.use((config) => {
