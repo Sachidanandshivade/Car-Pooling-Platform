@@ -69,14 +69,14 @@ public class RideRequestService {
                 throw new RuntimeException("You are already on a ride");
             }
 
-            double distance = locationService.distance(
-                    request.getPickupLat(),
-                    request.getPickupLng(),
-                    request.getDropLat(),
-                    request.getDropLng()
-            );
-
-            double fare = BASE_FARE + (distance * PRICE_PER_KM);
+           List<double[]> route = locationService.getRoute(
+        request.getPickupLat(),
+        request.getPickupLng(),
+        request.getDropLat(),
+        request.getDropLng()
+);
+double distance = locationService.roadDistance(route);
+double fare = Math.round((BASE_FARE + (distance * PRICE_PER_KM)) * 100.0) / 100.0;
 
             Ride newRide = Ride.builder()
                     .source(request.getSource())
