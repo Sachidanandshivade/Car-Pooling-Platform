@@ -1,8 +1,11 @@
 # 🚗 CarPooling Platform
 
-A full-stack car pooling application built with **Spring Boot** (backend) and **React + Vite + Tailwind CSS** (frontend).
+A full-stack Car Pooling / Cab Booking application built with **Spring Boot** (backend) and **React + Vite + Tailwind CSS** (frontend).
 
 ---
+
+## 🚀  Live Demo
+https://car-pooling-platform-jade.vercel.app/
 
 ## 📁 Project Structure
 
